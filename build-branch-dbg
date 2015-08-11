@@ -4,7 +4,6 @@ LR="$HOME/.local"
 BRANCHNAME="mpich"
 SRC="../mpich-dev"
 DEST="mpich-dev"
-CC="$HOME/bin/gcc-5" # use gcc-5 with ccache
 
 usage() {
     echo "Tools to build MPICH branch with debug configuration."
@@ -39,7 +38,7 @@ check_branch() {
 
 build_branch_dbg() {
     echo "Configuring $DEST/$1"
-    ../mpich-dev/configure --prefix="$LR/$DEST/$1" --enable-g=all --enable-fast=none --enable-fortran=no --disable-cxx --disable-romio | tee conf.log
+    CC="$HOME/bin/gcc-5" ../mpich-dev/configure --prefix="$LR/$DEST/$1" --enable-g=all --enable-fast=none --enable-fortran=no --disable-cxx --disable-romio | tee conf.log
     if [[ ! $? ]]; then
         echo "Configure failed."
         exit 2
