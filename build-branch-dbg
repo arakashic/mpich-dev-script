@@ -1,7 +1,7 @@
 #! /bin/bash
 
 LR="$HOME/.local"
-BRANCHNAME="mpich"
+BRANCHNAME=$(basename "$(pwd)")
 SRC="../mpich-dev"
 DEST="mpich-dev"
 
@@ -12,7 +12,9 @@ usage() {
     echo "The default prefix is $LR/$DEST/<BRANCHNAME>."
     echo "The default CC is $CC"
     echo "Usage:"
-    echo "    build-branch-dbg branch-name"
+    echo "    build-branch-dbg [branch-name]"
+    echo ""
+    echo "If [branch-name] is not given, the script will take the name of current directory as the branch name."
 }
 
 check_dirs() {
@@ -61,11 +63,12 @@ build_branch_dbg() {
 if [[ $1 == "" ]]; then
     # list all available
     usage
-    exit 0
 else
     BRANCHNAME=$1
-    check_dirs "$BRANCHNAME"
-    check_branch "$BRANCHNAME"
-    build_branch_dbg "$BRANCHNAME"
 fi
 
+check_dirs "$BRANCHNAME"
+check_branch "$BRANCHNAME"
+build_branch_dbg "$BRANCHNAME"
+
+exit 0
