@@ -57,7 +57,6 @@ build_branch_dbg() {
         echo "Install failed."
         exit 4
     fi
-    popd
 }
 
 if [[ $1 == "" ]]; then
