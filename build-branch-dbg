@@ -1,0 +1,72 @@
+#! /bin/bash
+
+LR="$HOME/.local"
+BRANCHNAME="mpich"
+SRC="../mpich-dev"
+DEST="mpich-dev"
+CC="$HOME/bin/gcc-5" # use gcc-5 with ccache
+
+usage() {
+    echo "Tools to build MPICH branch with debug configuration."
+    echo "This script should only be used in a build_dir."
+    echo "The default path to source is ../mpich-dev."
+    echo "The default prefix is $LR/$DEST/<BRANCHNAME>."
+    echo "The default CC is $CC"
+    echo "Usage:"
+    echo "    build-branch-dbg branch-name"
+}
+
+check_dirs() {
+    if [[ ! -d "$SRC" ]]; then
+        echo "Source directory $SRC does not exist."
+        exit 1
+    fi
+    if [[ ! -d "$LR/$DEST/$1" ]]; then
+        echo "Prefix directory $LR/$DEST/$1 does not exist."
+        exit 1
+    fi
+}
+
+check_branch() {
+    pushd "$SRC"
+    BRANCH_CURR=$(git rev-parse --abbrev-ref HEAD)
+    if [[ "$1" != "$BRANCH_CURR" ]]; then
+        echo "Current branch is $BRANCH_CURR, not $1"
+        exit 1
+    fi
+    popd
+}
+
+build_branch_dbg() {
+    echo "Configuring $DEST/$1"
+    ../mpich-dev/configure --prefix="$LR/$DEST/$1" --enable-g=all --enable-fast=none --enable-fortran=no --disable-cxx --disable-romio | tee conf.log
+    if [[ ! $? ]]; then
+        echo "Configure failed."
+        exit 2
+    fi
+    echo "Building $DEST/$1"
+    gmake -j 4 | tee make.log
+    if [[ ! $? ]]; then
+        echo "Make failed."
+        exit 3
+    fi
+    echo "Installling $DEST/$1"
+    gmake install | tee make_install.log
+    if [[ ! $? ]]; then
+        echo "Install failed."
+        exit 4
+    fi
+    popd
+}
+
+if [[ $1 == "" ]]; then
+    # list all available
+    usage
+    exit 0
+else
+    BRANCHNAME=$1
+    check_dirs "$BRANCHNAME"
+    check_branch "$BRANCHNAME"
+    build_branch_dbg "$BRANCHNAME"
+fi
+

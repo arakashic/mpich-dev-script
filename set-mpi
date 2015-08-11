@@ -1,0 +1,18 @@
+#! /bin/bash
+
+LIBNAME='mpich'
+
+if [[ $1 == "" ]]; then
+    # list all available
+    gls -F -la "$LR/" | grep --color=auto 'mpi \->'
+    find "$LR/mpich" -d 1 | sed -e 's/\.\///' | grep --color=auto "mpich/"
+    find "$LR/mpich-dev" -d 1 | sed -e 's/\.\///' | grep --color=auto "mpich-dev/"
+    exit 0
+else
+    LIBNAME=$1
+fi
+
+if [[ -d $LR/$LIBNAME ]]; then
+    unlink "$LR/mpi"
+    ln -s "$LIBNAME" "$LR/mpi"
+fi

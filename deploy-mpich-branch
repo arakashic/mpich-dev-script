@@ -1,0 +1,56 @@
+#! /bin/bash
+
+LR="$HOME/.local"
+BRANCHNAME="master"
+DEST="mpich-dev"
+
+usage() {
+    echo "Tools to deploy MPICH branch"
+    echo "deploy-mpich-branch branch-name"
+}
+
+check_branch() {
+    pushd mpich-dev
+    BRANCH_CURR=$(git rev-parse --abbrev-ref HEAD)
+    if [[ "$1" != "$BRANCH_CURR" ]]; then
+        echo "Current branch is $BRANCH_CURR, not $1"
+        exit 1
+    fi
+    popd
+}
+
+create_dir() {
+    if [[ -d "./$1" ]]; then
+        echo "Branch $1 already exists."
+        exit 1
+    fi
+    mkdir "./$1"
+    if [[ -d "$LR/$DEST/$1" ]]; then
+        echo "Branch $LR/$DEST/$1 already exists."
+        exit 1
+    fi
+    mkdir -p "$LR/$DEST/$1"
+}
+
+build_branch_dbg() {
+    if [[ -d "./$1" ]]; then
+        pushd "$1"
+    else
+        echo "Branch ./$1 does not exist."
+        exit 1
+    fi
+    build_branch_dbg "$1"
+    popd
+}
+
+if [[ $1 == "" ]]; then
+    # list all available
+    usage
+    exit 0
+else
+    BRANCHNAME=$1
+    check_branch "$BRANCHNAME"
+    create_dir "$BRANCHNAME"
+    build_branch_dbg "$BRANCHNAME"
+fi
+
