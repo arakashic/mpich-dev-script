@@ -39,7 +39,7 @@ build_branch_dbg() {
         echo "Branch ./$1 does not exist."
         exit 1
     fi
-    build_branch_dbg "$1"
+    build-branch-dbg "$1"
     popd
 }
 
