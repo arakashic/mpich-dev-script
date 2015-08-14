@@ -10,7 +10,7 @@ usage() {
 }
 
 check_branch() {
-    pushd mpich-dev
+    pushd mpich
     BRANCH_CURR=$(git rev-parse --abbrev-ref HEAD)
     if [[ "$1" != "$BRANCH_CURR" ]]; then
         echo "Current branch is $BRANCH_CURR, not $1"

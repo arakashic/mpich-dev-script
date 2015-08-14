@@ -2,7 +2,7 @@
 
 LR="$HOME/.local"
 BRANCHNAME=$(basename "$(pwd)")
-SRC="../mpich-dev"
+SRC="../mpich"
 DEST="mpich-dev"
 
 usage() {
