@@ -40,7 +40,7 @@ check_branch() {
 
 build_branch_dbg() {
     echo "Configuring $DEST/$1"
-    CC="$HOME/bin/gcc-5" ../${SRC}/configure --prefix="$LR/$DEST/$1" --enable-g=all --enable-fast=none --enable-fortran=no --disable-cxx --disable-romio | tee conf.log
+    CC="$HOME/bin/gcc-5" ${SRC}/configure --prefix="$LR/$DEST/$1" --enable-g=all --enable-fast=none --enable-fortran=no --disable-cxx --disable-romio | tee conf.log
     if [[ ! $? ]]; then
         echo "Configure failed."
         exit 2
