@@ -2,6 +2,7 @@
 
 LR="$HOME/.local"
 BRANCHNAME=$(basename "$(pwd)")
+OPTIONS=""
 SRC="../mpich"
 DEST="mpich-dev"
 
@@ -40,7 +41,11 @@ check_branch() {
 
 build_branch_dbg() {
     echo "Configuring $DEST/$1"
-    CC="$HOME/bin/gcc-5" ${SRC}/configure --prefix="$LR/$DEST/$1" --enable-g=all --enable-fast=none --enable-fortran=no --disable-cxx --disable-romio | tee conf.log
+    _configuration="${2:-}"
+    if [[ -n "$_configuration" ]]; then
+        echo "With $_configuration"
+    fi
+    CC="$HOME/bin/gcc-5" ${SRC}/configure --prefix="$LR/$DEST/$1" --enable-g=all --enable-fast=none --enable-fortran=no --disable-cxx --disable-romio "$_configuration" | tee conf.log
     if [[ ! $? ]]; then
         echo "Configure failed."
         exit 2
@@ -64,10 +69,11 @@ if [[ $1 == "" ]]; then
     usage
 else
     BRANCHNAME=$1
+    OPTIONS=${2:-}
 fi
 
 check_dirs "$BRANCHNAME"
 check_branch "$BRANCHNAME"
-build_branch_dbg "$BRANCHNAME"
+build_branch_dbg "$BRANCHNAME" "$OPTIONS"
 
 exit 0

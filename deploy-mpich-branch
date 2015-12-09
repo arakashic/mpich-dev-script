@@ -2,6 +2,7 @@
 
 LR="$HOME/.local"
 BRANCHNAME="master"
+OPTIONS=""
 DEST="mpich-dev"
 
 usage() {
@@ -39,7 +40,7 @@ build_branch_dbg() {
         echo "Branch ./$1 does not exist."
         exit 1
     fi
-    build-branch-dbg "$1"
+    build-branch-dbg "$1" "$2"
     popd
 }
 
@@ -49,8 +50,9 @@ if [[ $1 == "" ]]; then
     exit 0
 else
     BRANCHNAME=$1
+    OPTIONS=${2:-}
     check_branch "$BRANCHNAME"
     create_dir "$BRANCHNAME"
-    build_branch_dbg "$BRANCHNAME"
+    build_branch_dbg "$BRANCHNAME" "$OPTIONS"
 fi
 
