@@ -4,16 +4,17 @@ LIBNAME='mpich'
 
 if [[ $1 == "" ]]; then
     # list all available
-    echo "Current MPI: $(readlink "$LR/mpi")"
-    find "$LR/mpich" -maxdepth 1 | sed -e 's/\.\///' | grep --color=auto "mpich/"
-    find "$LR/mpich-dev" -maxdepth 1 | sed -e 's/\.\///' | grep --color=auto "mpich-dev/"
+    echo "Current MPI: $(readlink "$LR/mpi/current")"
+    find "$LR/mpi" -maxdepth 1 -type d
     exit 0
 else
     LIBNAME=$1
 fi
 
-if [[ -d $LR/$LIBNAME ]]; then
-    unlink "$LR/mpi"
-    ln -s "$LIBNAME" "$LR/mpi"
-    readlink "$LR/mpi"
+if [[ -d $LR/mpi/$LIBNAME ]]; then
+    unlink "$LR/mpi/current"
+    ln -s "$LIBNAME" "$LR/mpi/current"
+else
+    echo "MPI installation: $LIBNAME does not exist"
 fi
+echo "Current MPI: $(readlink "$LR/mpi/current")"
