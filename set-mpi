@@ -15,4 +15,5 @@ fi
 if [[ -d $LR/$LIBNAME ]]; then
     unlink "$LR/mpi"
     ln -s "$LIBNAME" "$LR/mpi"
+    readlink "$LR/mpi"
 fi
